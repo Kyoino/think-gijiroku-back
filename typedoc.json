@@ -1,0 +1,8 @@
+{
+  "mode": "modules",
+  "out": "docs/typedoc",
+  "name": "express_docker type documents",
+  "includeDeclarations": true,
+  "excludeExternals": true,
+  "exclude": ["bin/www.ts", "src/config/*", "ormconfig.ts"]
+}
