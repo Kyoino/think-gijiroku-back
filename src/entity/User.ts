@@ -9,14 +9,12 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Length } from 'class-validator';
-import * as bcrypt from 'bcryptjs';
 import { Role } from './Role';
 import { Note } from './Note';
 
 interface UserInterface {
   firstName: string;
   lastName: string;
-  password: string;
   roles: Array<Role>;
   notes?: Array<Note> | undefined;
 }
@@ -33,10 +31,6 @@ export class User {
   @Column({ name: 'last_name', type: 'varchar' })
   @Length(4, 20)
   lastName: string;
-
-  @Column({ name: 'password', select: false })
-  @Length(4, 100)
-  password!: string;
 
   @Column({ name: 'created_at' })
   @CreateDateColumn()
@@ -59,7 +53,6 @@ export class User {
   constructor(obj?: UserInterface) {
     this.firstName = (obj && obj.firstName) || '';
     this.lastName = (obj && obj.lastName) || '';
-    this.password = (obj && obj.password) || '';
     this.roles = obj && obj.roles;
     this.notes = (obj && obj.notes) || undefined;
   }
@@ -68,14 +61,9 @@ export class User {
   update(obj?: UserInterface): User {
     this.firstName = (obj && obj.firstName) || this.firstName;
     this.lastName = (obj && obj.lastName) || this.lastName;
-    this.password = (obj && obj.password) || this.password;
     this.roles = (obj && obj.roles) || this.roles;
     this.notes = (obj && obj.notes) || this.notes;
 
     return this;
-  }
-
-  checkIfUnencryptedPasswordIsValid(unencryptedPassword: string): boolean {
-    return bcrypt.compareSync(unencryptedPassword, this.password);
   }
 }
