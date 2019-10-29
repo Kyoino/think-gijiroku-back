@@ -3,7 +3,6 @@ import { getRepository } from 'typeorm';
 import { validate } from 'class-validator';
 
 import { User } from '../entity/User';
-import toHash from '../utils/to_hash';
 
 class UserController {
   static listAll = async (req: Request, res: Response): Promise<Response> => {
@@ -37,17 +36,14 @@ class UserController {
 
   static newUser = async (req: Request, res: Response): Promise<Response> => {
     //Get parameters from the body
-    const { firstName, lastName, password, roles } = req.body;
-    const user = new User({ firstName, lastName, roles, password });
+    const { firstName, lastName, roles } = req.body;
+    const user = new User({ firstName, lastName, roles });
 
     //Validate if the parameters are ok
     const errors = await validate(user);
     if (errors.length > 0) {
       return res.status(400).send(errors);
     }
-
-    //Hash the password, to securely store on DB
-    user.password = toHash(user.password);
 
     //Try to save. If fails, the name is already in use
     const userRepository = getRepository(User);
@@ -79,7 +75,6 @@ class UserController {
     }
 
     //Validate the new values on model
-    user.update({ firstName, lastName, password: user.password, roles, notes });
     const errors = await validate(user);
     if (errors.length > 0) {
       return res.status(400).send(errors);
