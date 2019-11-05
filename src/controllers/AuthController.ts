@@ -3,15 +3,35 @@ import { getRepository } from 'typeorm';
 import { validate } from 'class-validator';
 
 import { User } from '../entity/User';
+import axios, { AxiosInstance } from 'axios';
+
+// TODO: config file か環境変数から読み込ませる
+const AUTH_URI = 'http://gijiroku_express.develop-works.com/';
+const getAxiosServer = (baseURL: string): AxiosInstance =>
+  axios.create({
+    baseURL: baseURL,
+    headers: {
+      'Content-Type': 'application/hal+json',
+    },
+    responseType: 'json',
+  });
 
 class AuthController {
+  // axios server instance
+  static axiosServer = getAxiosServer(AUTH_URI);
+
   static login = async (req: Request, res: Response): Promise<Response> => {
+    let token = '';
+
     //Check if username and password are set
     const { firstName, lastName, password } = req.body;
     if (!(firstName && lastName && password)) {
       return res.status(400).send({ status: 'Invalid USER OBJECT' });
     }
 
+    AuthController.axiosServer.post('/auth/login').then(response => {
+      token = response.data;
+    });
     //Get user from database
     const userRepository = getRepository(User);
     let user!: User | undefined;
@@ -23,18 +43,12 @@ class AuthController {
     } catch (error) {
       return res.status(401).send('cannot get user from DB ');
     }
-
     if (user === undefined) {
-      return res.status(404).send();
+      user = new User({ firstName: firstName, lastName: lastName, roles: [] });
+      await userRepository.save(user);
+    } else {
+      return res.send({ token: token });
     }
-
-    //Check if encrypted password match
-    // if (!user.checkIfUnencryptedPasswordIsValid(password)) {
-    //   return res.status(401).send();
-    // }
-
-    const token = 'test_token';
-    return res.send({ token: token });
   };
 
   static changePassword = async (
