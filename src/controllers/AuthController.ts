@@ -46,6 +46,7 @@ class AuthController {
     if (user === undefined) {
       user = new User({ firstName: firstName, lastName: lastName, roles: [] });
       await userRepository.save(user);
+      return res.send({ token: token });
     } else {
       return res.send({ token: token });
     }
