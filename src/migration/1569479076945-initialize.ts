@@ -1,7 +1,6 @@
 import { getRepository, MigrationInterface, QueryRunner } from 'typeorm';
 import { Role } from '../entity/Role';
 import { User } from '../entity/User';
-import toHash from '../utils/to_hash';
 import { Note } from '../entity/Note';
 
 export class Initialize1569479076945 implements MigrationInterface {
@@ -15,7 +14,6 @@ export class Initialize1569479076945 implements MigrationInterface {
     const user = new User({
       firstName: 'kkiyama117',
       lastName: 'kkiyama',
-      password: toHash('pass'),
       roles: [admin],
     });
     const userRepository = getRepository(User);
