@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, response, Response } from 'express';
 import { getRepository } from 'typeorm';
 import { validate } from 'class-validator';
 
@@ -11,7 +11,7 @@ const getAxiosServer = (baseURL: string): AxiosInstance =>
   axios.create({
     baseURL: baseURL,
     headers: {
-      'Content-Type': 'application/hal+json',
+      'Content-Type': 'application/json',
     },
     responseType: 'json',
   });
@@ -21,17 +21,18 @@ class AuthController {
   static axiosServer = getAxiosServer(AUTH_URI);
 
   static login = async (req: Request, res: Response): Promise<Response> => {
-    let token = '';
-
     //Check if username and password are set
     const { firstName, lastName, password } = req.body;
     if (!(firstName && lastName && password)) {
       return res.status(400).send({ status: 'Invalid USER OBJECT' });
     }
 
-    AuthController.axiosServer.post('/auth/login').then(response => {
-      token = response.data;
+    const response = await AuthController.axiosServer.post('/auth/login', {
+      firstName: firstName,
+      lastName: lastName,
+      password: password,
     });
+    const token = response.data.token as string;
     //Get user from database
     const userRepository = getRepository(User);
     let user!: User | undefined;
