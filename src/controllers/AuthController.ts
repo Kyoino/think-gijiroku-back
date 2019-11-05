@@ -22,14 +22,13 @@ class AuthController {
 
   static login = async (req: Request, res: Response): Promise<Response> => {
     //Check if username and password are set
-    const { firstName, lastName, password } = req.body;
-    if (!(firstName && lastName && password)) {
+    const { userName, password } = req.body;
+    if (!(userName && password)) {
       return res.status(400).send({ status: 'Invalid USER OBJECT' });
     }
 
     const response = await AuthController.axiosServer.post('/auth/login', {
-      firstName: firstName,
-      lastName: lastName,
+      userName: userName,
       password: password,
     });
     const token = response.data.token as string;
@@ -39,13 +38,13 @@ class AuthController {
     try {
       user = await userRepository
         .createQueryBuilder('User')
-        .where({ firstName: firstName, lastName: lastName })
+        .where({ userName: userName })
         .getOne();
     } catch (error) {
       return res.status(401).send('cannot get user from DB ');
     }
     if (user === undefined) {
-      user = new User({ firstName: firstName, lastName: lastName, roles: [] });
+      user = new User({ userName: userName, roles: [] });
       await userRepository.save(user);
       return res.send({ token: token });
     } else {
