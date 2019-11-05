@@ -69,23 +69,28 @@ class AuthController {
     try {
       user = await userRepository
         .createQueryBuilder('User')
-        .addSelect('User.password')
         .where(id)
         .getOne();
     } catch (id) {
-      return res.status(401).send();
+      return res.status(401).send('no user in DB');
     }
     if (user === undefined) {
-      return res.status(404).send();
+      return res.status(404).send('user not found');
     }
 
-    const errors = await validate(user);
-    if (errors.length > 0) {
-      return res.status(400).send(errors);
+    const response = await AuthController.axiosServer.post(
+      '/auth/change-password',
+      {
+        id: id,
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+      }
+    );
+    if (response.status != 204) {
+      return res.status(response.status).send(response.statusText);
+    } else {
+      return res.status(204).send();
     }
-    await userRepository.save(user);
-
-    return res.status(204).send();
   };
 }
 
