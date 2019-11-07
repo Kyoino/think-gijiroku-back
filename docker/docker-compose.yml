@@ -22,7 +22,7 @@ services:
   express:
     tty: true
     stdin_open: true
-    image: node:alpine
+    image: node
     init: true
     user: node
     volumes:

@@ -23,7 +23,7 @@ services:
   express:
     tty: true
     stdin_open: true
-    image: node:alpine
+    image: node
     init: true
     env_file:
       - ../.env
