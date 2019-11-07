@@ -12,8 +12,7 @@ export class Initialize1569479076945 implements MigrationInterface {
     await roleRepository.save(admin);
     await roleRepository.save(normal);
     const user = new User({
-      firstName: 'kkiyama117',
-      lastName: 'kkiyama',
+      userName: 'kkiyama',
       roles: [admin],
     });
     const userRepository = getRepository(User);

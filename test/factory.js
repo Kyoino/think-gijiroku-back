@@ -7,8 +7,7 @@ import { Role } from '../src/entity/Role';
 export const authAdminFactory = new Factory(Role).attr('role', 'ADMIN');
 
 export const UserFactory = new Factory(User)
-  .attr('firstName', 'John')
-  .attr('lastName', 'Doe')
+  .attr('userName', 'John')
   .assocMany('roles', authAdminFactory);
 
 // .assocMany → toManyリレーション作成。最後の引数で一気に作る数を指定出来ます
