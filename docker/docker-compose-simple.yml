@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  express:
+    tty: true
+    stdin_open: true
+    image: node:alpine
+    init: true
+    user: node
+    volumes:
+      - ../:/app
+    working_dir: /app
+    ports:
+      - "8002:8000"
+    environment:
+      NODE_ENV: development
+    command: ['yarn', 'dev']
