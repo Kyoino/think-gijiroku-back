@@ -2,7 +2,7 @@
   "name": "express-docker-sample",
   "version": "0.0.1",
   "engines": {
-    "node": ">=12.8.1"
+    "node": ">=10.16.3"
   },
   "private": true,
   "author": "Kouhei Kiyama <k.kiyama117@gmail> (https://github.com/kkiyama117/)",
