@@ -7,7 +7,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/default.template.conf:/etc/nginx/conf.d/default_template
     ports:
-      - "8001:80"
+      - "8002:80"
     depends_on:
       - express
     links:
