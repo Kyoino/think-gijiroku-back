@@ -6,7 +6,7 @@ import { User } from '../entity/User';
 import axios, { AxiosInstance } from 'axios';
 
 // TODO: config file か環境変数から読み込ませる
-const AUTH_URI = 'http://gijiroku_express.develop-works.com/';
+const AUTH_URI = 'http://auth_express.develop-works.com/';
 const getAxiosServer = (baseURL: string): AxiosInstance =>
   axios.create({
     baseURL: baseURL,
